@@ -4,15 +4,33 @@
   <title>费用计算器</title>
     <style>
     /* 响应式布局 */
-    @media only screen and (max-width: 600px) {
-      /* 在屏幕宽度小于等于600px时，调整样式 */
-      body {
-        padding: 10px;
-      }
-      h1, h2 {
-        text-align: center;
-      }
-    }
+body {
+  width: 100%;
+}
+
+.container {
+  width: 90%; /* 设置容器宽度为屏幕宽度的90% */
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* 媒体查询 */
+@media only screen and (max-width: 768px) {
+  /* 在小屏幕设备上的样式 */
+  .container {
+    width: 80%; /* 根据需要进行调整 */
+    padding: 0 10px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  /* 在更小的屏幕设备上的样式 */
+  .container {
+    width: 70%; /* 根据需要进行调整 */
+    padding: 0 5px;
+  }
+}
+
   </style>
   <script>
     function calculate() {
