@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>费用计算器</title>
+  <script>
+    function calculate() {
+      // 获取输入字段的值
+      var currentBattery = parseFloat(document.getElementById('current-battery').value);
+      var electricityRate = parseFloat(document.getElementById('electricity-rate').value);
+      var serviceRate = parseFloat(document.getElementById('service-rate').value);
+      var fastServiceRate = parseFloat(document.getElementById('fast-service-rate').value);
+
+      // 计算需要充电电量/%
+      var requiredBattery = 100 - currentBattery;
+
+      // 计算需要充电度数
+      var requiredUnits = 60 * (requiredBattery / 100);
+
+      // 计算能优惠充电度数
+      var discountedUnits = 4 / (serviceRate - fastServiceRate);
+
+      // 判断是否超出4元优惠
+      var exceedDiscount = requiredUnits - discountedUnits > 0;
+
+      // 计算超出优惠度数
+      var extraDiscountedUnits = exceedDiscount ? requiredUnits - discountedUnits : 0;
+
+      // 计算未超出服务费计算
+      var noExceedServiceCharge = requiredUnits * fastServiceRate;
+
+      // 计算超出服务费计算
+      var exceedServiceCharge = extraDiscountedUnits * serviceRate;
+
+      // 计算电费计算
+      var electricityCharge = requiredUnits * electricityRate;
+
+      // 计算总费用计算
+      var totalCharge = noExceedServiceCharge + exceedServiceCharge + electricityCharge;
+
+      // 更新页面上的结果
+      document.getElementById('required-battery').innerHTML = requiredBattery.toFixed(2);
+      document.getElementById('required-units').innerHTML = requiredUnits.toFixed(2);
+      document.getElementById('discounted-units').innerHTML = discountedUnits.toFixed(2);
+      document.getElementById('exceed-discount').innerHTML = exceedDiscount;
+      document.getElementById('extra-discounted-units').innerHTML = extraDiscountedUnits.toFixed(2);
+      document.getElementById('no-exceed-service-charge').innerHTML = noExceedServiceCharge.toFixed(2);
+      document.getElementById('exceed-service-charge').innerHTML = exceedServiceCharge.toFixed(2);
+      document.getElementById('electricity-charge').innerHTML = electricityCharge.toFixed(2);
+      document.getElementById('total-charge').innerHTML = totalCharge.toFixed(2);
+    }
+  </script>
+</head>
+<body>
+  <h1>费用计算器</h1>
+
+  <label for="current-battery">当前电量（%）:</label>
+  <input type="number" id="current-battery" min="0" max="100" step="1"><br>
+
+  <label for="electricity-rate">电费（元/度）:</label>
+  <input type="number" id="electricity-rate" step="0.01"><br>
+
+  <label for="service-rate">服务费（元/度）:</label>
+  <input type="number" id="service-rate" step="0.01"><br>
+
+  <label for="fast-service-rate">快电服务费（元/度）:</label>
+  <input type="number" id="fast-service-rate" step="0.01"><br>
+
+  <button onclick="calculate()">计算</button>
+
+  <h2>计算结果</h2>
+  <p>需要充电电量（%）: <span id="required-battery"></```html
+</span></p>
+  <p>需要充电度数: <span id="required-units"></span></p>
+  <p>能优惠充电度数: <span id="discounted-units"></span></p>
+  <p>超出4元优惠: <span id="exceed-discount"></span></p>
+  <p>超出优惠度数: <span id="extra-discounted-units"></span></p>
+  <p>未超出服务费计算: <span id="no-exceed-service-charge"></span></p>
+  <p>超出服务费计算: <span id="exceed-service-charge"></span></p>
+  <p>电费计算: <span id="electricity-charge"></span></p>
+  <p>总费用计算: <span id="total-charge"></span></p>
+</body>
+</html>
