@@ -17,7 +17,7 @@
       var requiredUnits = 60 * (requiredBattery / 100);
 
       // 计算能优惠充电度数
-      var discountedUnits = 4 / (serviceRate - fastServiceRate);
+      var discountedUnits = 6 / (serviceRate - fastServiceRate);
 
       // 判断是否超出4元优惠
       var exceedDiscount = requiredUnits - discountedUnits > 0;
