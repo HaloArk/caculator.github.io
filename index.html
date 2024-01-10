@@ -19,7 +19,7 @@
       // 计算能优惠充电度数
       var discountedUnits = 6 / (serviceRate - fastServiceRate);
 
-      // 判断是否超出4元优惠
+      // 判断是否超出6元优惠
       var exceedDiscount = requiredUnits - discountedUnits > 0;
 
       // 计算超出优惠度数
@@ -72,7 +72,7 @@
 </span></p>
   <p>需要充电度数: <span id="required-units"></span></p>
   <p>能优惠充电度数: <span id="discounted-units"></span></p>
-  <p>超出4元优惠: <span id="exceed-discount"></span></p>
+  <p>超出6元优惠: <span id="exceed-discount"></span></p>
   <p>超出优惠度数: <span id="extra-discounted-units"></span></p>
   <p>未超出服务费计算: <span id="no-exceed-service-charge"></span></p>
   <p>超出服务费计算: <span id="exceed-service-charge"></span></p>
