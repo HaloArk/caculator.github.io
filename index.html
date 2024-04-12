@@ -1,82 +1,148 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>费用计算器</title>
-  <script>
-    function calculate() {
-      // 获取输入字段的值
-      var currentBattery = parseFloat(document.getElementById('current-battery').value);
-      var electricityRate = parseFloat(document.getElementById('electricity-rate').value);
-      var serviceRate = parseFloat(document.getElementById('service-rate').value);
-      var fastServiceRate = parseFloat(document.getElementById('fast-service-rate').value);
-
-      // 计算需要充电电量/%
-      var requiredBattery = 100 - currentBattery;
-
-      // 计算需要充电度数
-      var requiredUnits = 60 * (requiredBattery / 100);
-
-      // 计算能优惠充电度数
-      var discountedUnits = 6 / (serviceRate - fastServiceRate);
-
-      // 判断是否超出6元优惠
-      var exceedDiscount = requiredUnits - discountedUnits > 0;
-
-      // 计算超出优惠度数
-      var extraDiscountedUnits = exceedDiscount ? requiredUnits - discountedUnits : 0;
-
-      // 计算未超出服务费计算
-      var noExceedServiceCharge = requiredUnits * fastServiceRate;
-
-      // 计算超出服务费计算
-      var exceedServiceCharge = extraDiscountedUnits * serviceRate;
-
-      // 计算电费计算
-      var electricityCharge = requiredUnits * electricityRate;
-
-      // 计算总费用计算
-      var totalCharge = noExceedServiceCharge + exceedServiceCharge + electricityCharge;
-
-      // 更新页面上的结果
-      document.getElementById('required-battery').innerHTML = requiredBattery.toFixed(2);
-      document.getElementById('required-units').innerHTML = requiredUnits.toFixed(2);
-      document.getElementById('discounted-units').innerHTML = discountedUnits.toFixed(2);
-      document.getElementById('exceed-discount').innerHTML = exceedDiscount;
-      document.getElementById('extra-discounted-units').innerHTML = extraDiscountedUnits.toFixed(2);
-      document.getElementById('no-exceed-service-charge').innerHTML = noExceedServiceCharge.toFixed(2);
-      document.getElementById('exceed-service-charge').innerHTML = exceedServiceCharge.toFixed(2);
-      document.getElementById('electricity-charge').innerHTML = electricityCharge.toFixed(2);
-      document.getElementById('total-charge').innerHTML = totalCharge.toFixed(2);
+  <!-- 引入 Vue.js -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <style>
+    body {
+      background-color: #333;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
     }
-  </script>
+    h1, h2 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #555;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      background-color: #444;
+      color: #fff;
+    }
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    p {
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
-  <h1>费用计算器</h1>
+  <div id="app">
+    <h1>费用计算器</h1>
 
-  <label for="current-battery">当前电量（%）:</label>
-  <input type="number" id="current-battery" min="0" max="100" step="1"><br>
+    <label for="current-battery">当前电量（%）:</label>
+    <input type="number" id="current-battery" v-model="currentBattery" min="0" max="100" step="1">
 
-  <label for="electricity-rate">电费（元/度）:</label>
-  <input type="number" id="electricity-rate" step="0.01"><br>
+    <label for="electricity-rate">电费（元/度）:</label>
+    <input type="number" id="electricity-rate" v-model="electricityRate" step="0.01">
 
-  <label for="service-rate">服务费（元/度）:</label>
-  <input type="number" id="service-rate" step="0.01"><br>
+    <label for="service-rate">服务费（元/度）:</label>
+    <input type="number" id="service-rate" v-model="serviceRate" step="0.01">
 
-  <label for="fast-service-rate">快电服务费（元/度）:</label>
-  <input type="number" id="fast-service-rate" step="0.01"><br>
+    <label for="fast-service-rate">快电服务费（元/度）:</label>
+    <input type="number" id="fast-service-rate" v-model="fastServiceRate" step="0.01">
 
-  <button onclick="calculate()">计算</button>
+    <button @click="calculate">计算</button>
 
-  <h2>计算结果</h2>
-  <p>需要充电电量（%）: <span id="required-battery"></```html
-</span></p>
-  <p>需要充电度数: <span id="required-units"></span></p>
-  <p>能优惠充电度数: <span id="discounted-units"></span></p>
-  <p>超出6元优惠: <span id="exceed-discount"></span></p>
-  <p>超出优惠度数: <span id="extra-discounted-units"></span></p>
-  <p>未超出服务费计算: <span id="no-exceed-service-charge"></span></p>
-  <p>超出服务费计算: <span id="exceed-service-charge"></span></p>
-  <p>电费计算: <span id="electricity-charge"></span></p>
-  <p>总费用计算: <span id="total-charge"></span></p>
+    <h2>计算结果</h2>
+    <p>需要充电电量（%）: <span>{{ requiredBattery.toFixed(2) }}</span></p>
+    <p>需要充电度数: <span>{{ requiredUnits.toFixed(2) }}</span></p>
+    <p>能优惠充电度数: <span>{{ discountedUnits.toFixed(2) }}</span></p>
+    <p>超出6元优惠: <span>{{ exceedDiscount }}</span></p>
+    <p>超出优惠度数: <span>{{ extraDiscountedUnits.toFixed(2) }}</span></p>
+    <p>未超出服务费计算: <span>{{ noExceedServiceCharge.toFixed(2) }}</span></p>
+    <p>超出服务费计算: <span>{{ exceedServiceCharge.toFixed(2) }}</span></p>
+    <p>电费计算: <span>{{ electricityCharge.toFixed(2) }}</span></p>
+    <p>总费用计算: <span>{{ totalCharge.toFixed(2) }}</span></p>
+  </div>
+
+  <!-- Vue.js 实例 -->
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        currentBattery: 0,
+        electricityRate: 0,
+        serviceRate: 0,
+        fastServiceRate: 0
+      },
+      methods: {
+        calculate: function() {
+          var requiredBattery = 100 - this.currentBattery;
+          var requiredUnits = 60 * (requiredBattery / 100);
+          var discountedUnits = 6 / (this.serviceRate - this.fastServiceRate);
+          var exceedDiscount = requiredUnits - discountedUnits > 0;
+          var extraDiscountedUnits = exceedDiscount ? requiredUnits - discountedUnits : 0;
+          var noExceedServiceCharge = requiredUnits * this.fastServiceRate;
+          var exceedServiceCharge = extraDiscountedUnits * this.serviceRate;
+          var electricityCharge = requiredUnits * this.electricityRate;
+          var totalCharge = noExceedServiceCharge + exceedServiceCharge + electricityCharge;
+
+          this.requiredBattery = requiredBattery;
+          this.requiredUnits = requiredUnits;
+          this.discountedUnits = discountedUnits;
+          this.exceedDiscount = exceedDiscount;
+          this.extraDiscountedUnits = extraDiscountedUnits;
+          this.noExceedServiceCharge = noExceedServiceCharge;
+          this.exceedServiceCharge = exceedServiceCharge;
+          this.electricityCharge = electricityCharge;
+          this.totalCharge = totalCharge;
+        }
+      },
+      computed: {
+        // 使用计算属性来确保每次数据更新后自动重新计算
+        requiredBattery: function() {
+          return 100 - this.currentBattery;
+        },
+        requiredUnits: function() {
+          return 60 * (this.requiredBattery / 100);
+        },
+        discountedUnits: function() {
+          return 6 / (this.serviceRate - this.fastServiceRate);
+        },
+        exceedDiscount: function() {
+          return this.requiredUnits - this.discountedUnits > 0;
+        },
+        extraDiscountedUnits: function() {
+          return this.exceedDiscount ? this.requiredUnits - this.discountedUnits : 0;
+        },
+        noExceedServiceCharge: function() {
+          return this.requiredUnits * this.fastServiceRate;
+        },
+        exceedServiceCharge: function() {
+          return this.extraDiscountedUnits * this.serviceRate;
+        },
+        electricityCharge: function() {
+          return this.requiredUnits * this.electricityRate;
+        },
+        totalCharge: function() {
+          return this.noExceedServiceCharge + this.exceedServiceCharge + this.electricityCharge;
+        }
+      }
+    });
+  </script>
 </body>
 </html>
